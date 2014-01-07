@@ -6,7 +6,7 @@ CREATE TABLE "token" (
 "uses_allowed" INTEGER,
 "uses_remaining" INTEGER,
 "expires" INTEGER,
-"created" INTEGER,
+"created" INTEGER
 );
 CREATE INDEX "token_token" ON "token" ("token");
 CREATE INDEX "token_expires" ON "token" ("expires");
