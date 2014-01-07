@@ -22,7 +22,7 @@ class ETokenManager extends CComponent
      * @var string name of the DB table to store token content. Defaults to 'Token'.
      * @see autoCreateTokenTable
      */
-    public $tokenTableName = 'Token';
+    public $tokenTableName = 'token';
 
     /**
      * @var boolean whether the token DB table should be created automatically if it does not exist. Defaults to true.
