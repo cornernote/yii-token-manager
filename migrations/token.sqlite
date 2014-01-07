@@ -1,0 +1,14 @@
+CREATE TABLE "token" (
+"id"  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+"token" TEXT,
+"model_name" TEXT,
+"model_id" TEXT,
+"uses_allowed" INTEGER,
+"uses_remaining" INTEGER,
+"expires" INTEGER,
+"created" INTEGER,
+);
+CREATE INDEX "token_token" ON "token" ("token");
+CREATE INDEX "token_expires" ON "token" ("expires");
+CREATE INDEX "token_uses_allowed" ON "token" ("uses_allowed");
+CREATE INDEX "token_uses_remaining" ON "token" ("uses_remaining");

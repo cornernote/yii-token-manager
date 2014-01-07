@@ -1,0 +1,13 @@
+CREATE TABLE `token` (
+`id` int(11) NOT NULL AUTO_INCREMENT,
+`token` varchar(64),
+`model_name` varchar(255),
+`model_id` varchar(255),
+`uses_allowed` int(11),
+`uses_remaining` int(11),
+`expires` int(11),
+`created` int(11),
+PRIMARY KEY (`id`),
+KEY `token` (`token`),
+KEY `expires` (`expires`)
+);
