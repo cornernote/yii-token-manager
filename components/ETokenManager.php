@@ -130,7 +130,7 @@ class ETokenManager extends CComponent
     {
         $plain = md5($this->hashToken(uniqid(true)));
         $token = $this->hashToken($plain);
-        $this->getDbConnection()->getCommandBuilder()->createInsertCommand($this->cacheTableName, array(
+        $this->getDbConnection()->getCommandBuilder()->createInsertCommand($this->tokenTableName, array(
             'uses_allowed' => $uses_allowed,
             'uses_remaining' => $uses_allowed,
             'expires' => $expires,
@@ -151,7 +151,7 @@ class ETokenManager extends CComponent
     public function checkToken($model_name, $model_id, $plain)
     {
         // get the token
-        $sql = "SELECT id, token, uses_allowed, uses_remaining, expires FROM {$this->cacheTableName} WHERE model_name=:model_name AND model_id=:model_id ORDER BY created DESC, id DESC LIMIT 1";
+        $sql = "SELECT id, token, uses_allowed, uses_remaining, expires FROM {$this->tokenTableName} WHERE model_name=:model_name AND model_id=:model_id ORDER BY created DESC, id DESC LIMIT 1";
         $token = $this->getDbConnection()->createCommand($sql)->queryRow(array(
             ':model_name' => $model_name,
             ':model_id' => $model_id,
@@ -194,7 +194,7 @@ class ETokenManager extends CComponent
         }
         if ($token['uses_allowed'] > 0) {
             // deduct from uses remaining
-            $sql = "UPDATE {$this->cacheTableName} SET uses_remaining = :uses_remaining WHERE id = :id";
+            $sql = "UPDATE {$this->tokenTableName} SET uses_remaining = :uses_remaining WHERE id = :id";
             $this->getDbConnection()->createCommand($sql)->execute(array(
                 ':id' => $token['id'],
                 ':uses_remaining' => $token['uses_remaining'] - 1,
