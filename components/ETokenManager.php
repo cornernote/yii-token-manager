@@ -56,7 +56,7 @@ class ETokenManager extends CComponent
         $db = $this->getDbConnection();
         $db->setActive(true);
         if ($this->autoCreateTokenTable) {
-            $sql = "DELETE FROM {$this->tokenTableName} WHERE (expire>0 AND expire<" . time() . ") OR (uses_allowed>0 AND uses_remaining<1)";
+            $sql = "DELETE FROM {$this->tokenTableName} WHERE (expires>0 AND expires<" . time() . ") OR (uses_allowed>0 AND uses_remaining<1)";
             try {
                 $db->createCommand($sql)->execute();
             } catch (Exception $e) {
@@ -152,7 +152,7 @@ class ETokenManager extends CComponent
     {
         // get the token
         $sql = "SELECT id, token, uses_allowed, uses_remaining, expires FROM {$this->tokenTableName} WHERE model_name=:model_name AND model_id=:model_id ORDER BY created DESC, id DESC LIMIT 1";
-        $token = $this->getDbConnection()->createCommand($sql)->queryRow(array(
+        $token = $this->getDbConnection()->createCommand($sql)->queryRow(true, array(
             ':model_name' => $model_name,
             ':model_id' => $model_id,
         ));
@@ -173,7 +173,7 @@ class ETokenManager extends CComponent
             return false;
         }
         // check token plain
-        if (!$token->verifyToken($plain)) {
+        if (!$this->verifyToken($plain, $token['token'])) {
             Yii::log($log . 'token is invalid');
             return false;
         }
@@ -189,11 +189,10 @@ class ETokenManager extends CComponent
     public function useToken($model, $model_id, $plain)
     {
         $token = $this->checkToken($model, $model_id, $plain);
-        if (!$token) {
+        if (!$token)
             return false;
-        }
+        // deduct from uses remaining
         if ($token['uses_allowed'] > 0) {
-            // deduct from uses remaining
             $sql = "UPDATE {$this->tokenTableName} SET uses_remaining = :uses_remaining WHERE id = :id";
             $this->getDbConnection()->createCommand($sql)->execute(array(
                 ':id' => $token['id'],
@@ -210,10 +209,8 @@ class ETokenManager extends CComponent
      */
     public function verifyToken($plain, $encrypted = null)
     {
-        $encrypted = $encrypted ? $encrypted : $this->token;
-        if (!$plain || !$encrypted) {
+        if (!$plain || !$encrypted)
             return false;
-        }
         return CPasswordHelper::verifyPassword($plain, $encrypted);
     }
 
