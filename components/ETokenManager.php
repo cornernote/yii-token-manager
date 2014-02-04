@@ -8,7 +8,7 @@
  *
  * @package yii-token-manager
  */
-class ETokenManager extends CComponent
+class ETokenManager extends CApplicationComponent
 {
 
     /**
@@ -53,6 +53,7 @@ class ETokenManager extends CComponent
      */
     public function init()
     {
+        parent::init();
         $db = $this->getDbConnection();
         $db->setActive(true);
         if ($this->autoCreateTokenTable) {
