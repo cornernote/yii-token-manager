@@ -147,7 +147,7 @@ class ETokenManager extends CApplicationComponent
      * @param $model_name
      * @param $model_id
      * @param $plain
-     * @return bool
+     * @return bool|array
      */
     public function checkToken($model_name, $model_id, $plain)
     {
@@ -178,7 +178,7 @@ class ETokenManager extends CApplicationComponent
             Yii::log($log . 'token is invalid');
             return false;
         }
-        return true;
+        return $token;
     }
 
     /**
